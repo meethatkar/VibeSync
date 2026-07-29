@@ -1,0 +1,116 @@
+const userModel = require("../models/users.model");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+async function Register(req, res) {
+  const { email, username, password } = req.body;
+
+  const isEmailOrUsernameTaken = await userModel.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (isEmailOrUsernameTaken) {
+    console.log("EMAIL TAKEN :: ", isEmailOrUsernameTaken);
+
+    return res.status(409).json({
+      message:
+        isEmailOrUsernameTaken.email === email
+          ? "email already exists, try to login"
+          : "username is taken, try different one",
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await userModel.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
+
+  const token = jwt.sign(
+    {
+      username: user.username,
+      user: user._id,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "3d" },
+  );
+
+  res.cookie("jwt_token", token, {
+    /**
+     * httpOnly: true
+     * JavaScript cannot access the cookie (document.cookie won't see it).
+     * Protects against XSS attacks.
+     */
+    httpOnly: true,
+    // sameSite → Controls when the browser sends the cookie.
+    sameSite: "none",
+    /**
+     * secure: true
+     * Cookie is sent only over HTTPS.
+     * Prevents sending the cookie over insecure HTTP.
+     */
+    secure: true,
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({
+    message: "user registered",
+    user,
+  });
+}
+
+async function Login(req, res) {
+  const { username, email, password } = req.body;
+
+  const isUserExists = await userModel.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (!isUserExists) {
+    return res.status(400).json({
+      message: "invalid Credentials",
+    });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    isUserExists.password,
+  );
+
+  if (!isPasswordCorrect) {
+    return res.status(400).json({
+      message: "invalid Credentials",
+    });
+  }
+
+  const token = jwt.sign(
+    {
+      username: isUserExists.username,
+      userId: isUserExists._id,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "3d" },
+  );
+
+  res.cookie("jwt_token", token, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+    sameSite: "none",
+  });
+
+  res.status(201).json({
+    message: "login success",
+    user: {
+      username,
+      email,
+    },
+  });
+}
+
+module.exports = {
+  Register,
+  Login,
+};
