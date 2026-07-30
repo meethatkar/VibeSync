@@ -37,7 +37,7 @@ async function Register(req, res) {
     { expiresIn: "3d" },
   );
 
-  res.cookie("jwt_token", token, {
+  res.cookie("jwt_secret", token, {
     /**
      * httpOnly: true
      * JavaScript cannot access the cookie (document.cookie won't see it).
@@ -64,9 +64,14 @@ async function Register(req, res) {
 async function Login(req, res) {
   const { username, email, password } = req.body;
 
-  const isUserExists = await userModel.findOne({
-    $or: [{ username }, { email }],
-  });
+  const isUserExists = await userModel
+    .findOne({
+      $or: [{ username }, { email }],
+    })
+    .select("+password");
+  // Here done .select("+password"), as  be default password is not taken while fetching user
+  // data, due to select: false property in schema, but due to this line ".select(+password)"
+  // we can access password and it's send in return of fetched data.
 
   if (!isUserExists) {
     return res.status(400).json({
@@ -94,7 +99,7 @@ async function Login(req, res) {
     { expiresIn: "3d" },
   );
 
-  res.cookie("jwt_token", token, {
+  res.cookie("jwt_secret", token, {
     httpOnly: true,
     secure: true,
     maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -110,7 +115,25 @@ async function Login(req, res) {
   });
 }
 
+async function getMe(req, res) {
+  const userId = req.user.userId;
+
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    return res.status(400).json({
+      message: "invalid creditianls",
+    });
+  }
+
+  res.status(200).json({
+    message: "user fetched",
+    user,
+  });
+}
+
 module.exports = {
   Register,
   Login,
+  getMe,
 };
