@@ -1,11 +1,22 @@
 const jwt = require("jsonwebtoken");
+const blacklistModel = require("../models/blacklist.model");
+const redis = require("../config/cache");
+const tokenBlacklistModel = require("../models/blacklist.model");
 
-function verfiyUser(req, res, next) {
+async function verfiyUser(req, res, next) {
   const token = req.cookies.jwt_secret;
 
   if (!token) {
     return res.status(404).json({
       message: "token not provided",
+    });
+  }
+
+  const isTokenBlacklist = await redis.get(token);
+
+  if (isTokenBlacklist) {
+    return res.status(401).json({
+      message: "token is blacklisted",
     });
   }
 

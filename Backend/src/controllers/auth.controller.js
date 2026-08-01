@@ -1,6 +1,8 @@
 const userModel = require("../models/users.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const blacklistingModel = require("../models/blacklist.model");
+const redis = require("../config/cache");
 
 async function Register(req, res) {
   const { email, username, password } = req.body;
@@ -10,8 +12,6 @@ async function Register(req, res) {
   });
 
   if (isEmailOrUsernameTaken) {
-    console.log("EMAIL TAKEN :: ", isEmailOrUsernameTaken);
-
     return res.status(409).json({
       message:
         isEmailOrUsernameTaken.email === email
@@ -132,8 +132,22 @@ async function getMe(req, res) {
   });
 }
 
+async function logout(req, res) {
+  const token = req.cookies.jwt_secret;
+  // await blacklistingModel.create({
+  //   token,
+  // });
+  await redis.set(token, Date.now().toString()); //added token in redis, as (key,value) pair
+  res.clearCookie("jwt_secret");
+
+  res.status(201).json({
+    message: "logout success",
+  });
+}
+
 module.exports = {
   Register,
   Login,
   getMe,
+  logout,
 };
