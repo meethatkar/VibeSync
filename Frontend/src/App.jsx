@@ -1,13 +1,8 @@
-import './App.css'
-import Camera from './features/expression/components/Camera'
+import { RouterProvider } from "react-router-dom";
+import { router } from "../app.routes";
 
 function App() {
-
-  return (
-    <>
-      <Camera />
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

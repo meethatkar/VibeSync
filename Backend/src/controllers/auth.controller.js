@@ -134,9 +134,6 @@ async function getMe(req, res) {
 
 async function logout(req, res) {
   const token = req.cookies.jwt_secret;
-  // await blacklistingModel.create({
-  //   token,
-  // });
   await redis.set(token, Date.now().toString()); //added token in redis, as (key,value) pair
   res.clearCookie("jwt_secret");
 
