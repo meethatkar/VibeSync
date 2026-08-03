@@ -1,13 +1,11 @@
-import './App.css'
-import Camera from './features/expression/components/Camera'
+import { RouterProvider } from "react-router-dom";
+import { router } from "../app.routes";
+import { AuthProvider } from "./features/auth/auth.context";
 
 function App() {
-
-  return (
-    <>
-      <Camera />
-    </>
-  )
+  return <AuthProvider>
+    <RouterProvider router={router} />
+  </AuthProvider>
 }
 
-export default App
+export default App;
