@@ -43,7 +43,8 @@ export const useAuth = () => {
   const GetUser = async () => {
     setLoading(true);
     try {
-      await apiGetMe();
+      const response = await apiGetMe();
+      setUser(response.user)
     } catch (error) {
       setError(error);
       console.log("Fetching User ERROR IN API CALL: ", error);
@@ -66,6 +67,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     GetUser();
+    console.log("USER X: ", user);
+
   }, []);
   return { user, error, RegisterUser, LoginUser, GetUser, Logout, loading };
 };
