@@ -62,11 +62,11 @@ async function Register(req, res) {
 }
 
 async function Login(req, res) {
-  const { username, email, password } = req.body;
+  const { userInfo, password } = req.body;
 
   const isUserExists = await userModel
     .findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username: userInfo }, { email: userInfo }],
     })
     .select("+password");
   // Here done .select("+password"), as  be default password is not taken while fetching user
@@ -109,8 +109,8 @@ async function Login(req, res) {
   res.status(201).json({
     message: "login success",
     user: {
-      username,
-      email,
+      username: isUserExists.username,
+      email: isUserExists.email,
     },
   });
 }
