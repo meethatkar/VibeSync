@@ -9,11 +9,20 @@ async function uploadSong(req, res) {
   const songUrl = await imgKit.uploadFile(songBuffer, tags.title + " mp3", "songs");
   const posterUrl = await imgKit.uploadFile(tags.image.imageBuffer, tags.title + " img", "song-poster");
 
-  console.log("SONG URL: ", songUrl);
-  console.log("POSTER URL: ", posterUrl);
+  const song = await songModel.create({
+    name: tags.title,
+    singer: tags.artist,
+    releasedOn: tags.year,
+    plays: req.body.plays,
+    songUrl: songUrl.url,
+    duration: songUrl.duration,
+    posterUrl: posterUrl.url,
+    mood: req.body.mood,
+  })
 
   res.status(201).json({
-    message: "song added"
+    message: "song added",
+    song
   })
 }
 
