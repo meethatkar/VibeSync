@@ -4,6 +4,7 @@ const cors = require("cors");
 
 // Routes import
 const authRoute = require("./routes/auth.route");
+const songRoute = require("./routes/songs.route");
 
 const app = express();
 
@@ -18,5 +19,7 @@ app.use(
 
 // Routes use
 app.use("/api/auth", authRoute);
+app.use("/api/song", songRoute);
+
 
 module.exports = app;
