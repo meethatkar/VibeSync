@@ -1,41 +1,44 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../auth.context'
-import { apiGetMe, apiLogin, apiLogout, apiRegister } from '../service/auth.api';
+import React, { useContext } from "react";
+import { AuthContext } from "../auth.context";
+import {
+  apiGetMe,
+  apiLogin,
+  apiLogout,
+  apiRegister,
+} from "../service/auth.api";
+import { useEffect } from "react";
 
 export const useAuth = () => {
-  const { user, setUSer, loading, setLoading, error, setError } = useContext(AuthContext);
+  const { user, setUser, loading, setLoading, error, setError } =
+    useContext(AuthContext);
 
   const RegisterUser = async (email, username, password) => {
     setLoading(true);
     try {
       const response = await apiRegister(email, username, password);
-      setUSer(response);
+      setUser(response);
       console.log(("RESPONSE USER DATA: ", response));
-
     } catch (error) {
       setError(error);
       console.log("REGISTER ERROR IN API CALL: ", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const LoginUser = async (userInfo, password) => {
     setLoading(true);
     try {
       const response = await apiLogin(userInfo, password);
-      setUSer(response);
+      setUser(response);
       console.log(("RESPONSE USER DATA: ", response));
-
     } catch (error) {
       setError(error);
       console.log("LOGIN ERROR IN API CALL: ", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const GetUser = async () => {
     setLoading(true);
@@ -44,11 +47,10 @@ export const useAuth = () => {
     } catch (error) {
       setError(error);
       console.log("Fetching User ERROR IN API CALL: ", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const Logout = async () => {
     setLoading(true);
@@ -57,11 +59,13 @@ export const useAuth = () => {
     } catch (error) {
       setError(error);
       console.log("LOGOUT ERROR IN API CALL: ", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
-  return { user, error, RegisterUser, LoginUser, GetUser, Logout, loading }
-}
+  useEffect(() => {
+    GetUser();
+  }, []);
+  return { user, error, RegisterUser, LoginUser, GetUser, Logout, loading };
+};
