@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
-const blacklistModel = require("../models/blacklist.model");
 const redis = require("../config/cache");
-const tokenBlacklistModel = require("../models/blacklist.model");
 
 async function verfiyUser(req, res, next) {
   const token = req.cookies.jwt_secret;

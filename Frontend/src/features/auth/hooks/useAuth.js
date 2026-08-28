@@ -13,6 +13,7 @@ export const useAuth = () => {
     useContext(AuthContext);
 
   const RegisterUser = async (email, username, password) => {
+    setError(null);
     setLoading(true);
     try {
       const response = await apiRegister(email, username, password);
@@ -27,6 +28,7 @@ export const useAuth = () => {
   };
 
   const LoginUser = async (userInfo, password) => {
+    setError(null);
     setLoading(true);
     try {
       const response = await apiLogin(userInfo, password);
@@ -41,10 +43,11 @@ export const useAuth = () => {
   };
 
   const GetUser = async () => {
+    setError(null);
     setLoading(true);
     try {
       const response = await apiGetMe();
-      setUser(response.user)
+      setUser(response.user);
     } catch (error) {
       setError(error);
       console.log("Fetching User ERROR IN API CALL: ", error);
@@ -54,6 +57,7 @@ export const useAuth = () => {
   };
 
   const Logout = async () => {
+    setError(null);
     setLoading(true);
     try {
       await apiLogout();
@@ -65,10 +69,14 @@ export const useAuth = () => {
     }
   };
 
+  /**
+   * In-memory React state (user) gets reset to null.
+The useEffect calls GetUser() to reach out to the backend (via cookies/token) and check: "Is this user already logged in?"
+If yes, it restores the user data into state so the user stays logged in without having to enter their password again.
+   */
   useEffect(() => {
     GetUser();
     console.log("USER X: ", user);
-
   }, []);
   return { user, error, RegisterUser, LoginUser, GetUser, Logout, loading };
 };

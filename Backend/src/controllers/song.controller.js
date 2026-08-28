@@ -6,8 +6,10 @@ async function uploadSong(req, res) {
   const songBuffer = req.file.buffer;
   const tags = id3.read(req.file.buffer)
 
-  const songUrl = await imgKit.uploadFile(songBuffer, tags.title + " mp3", "songs");
-  const posterUrl = await imgKit.uploadFile(tags.image.imageBuffer, tags.title + " img", "song-poster");
+  const [songUrl, posterUrl] = await Promise.all([
+    imgKit.uploadFile(songBuffer, tags.title + " mp3", "songs"),
+    imgKit.uploadFile(tags.image.imageBuffer, tags.title + " img", "song-poster")
+  ])
 
   const song = await songModel.create({
     name: tags.title,
@@ -26,6 +28,18 @@ async function uploadSong(req, res) {
   })
 }
 
+async function getSong(req, res) {
+  const mood = req.query.mood;
+
+  const song = await songModel.findOne({ mood: mood });
+
+  res.status(200).json({
+    message: "song fetched",
+    song
+  })
+}
+
 module.exports = {
-  uploadSong
+  uploadSong,
+  getSong
 }

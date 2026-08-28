@@ -7,8 +7,13 @@ const songController = require("../controllers/song.controller");
 const songRouter = Router();
 
 /**
- * @route "/api/song/"
+ * @route POST "/api/song/"
  */
 songRouter.post("/", upload.single("song"), songController.uploadSong);
+
+/**
+ * @route GET "/api/song/"
+ */
+songRouter.get("/", songController.getSong);
 
 module.exports = songRouter;

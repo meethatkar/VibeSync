@@ -28,6 +28,8 @@ const FormGroup = ({ label, placeholder, type, onEnter }) => {
             className="password-toggle"
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+            aria-controls="password-input"
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
