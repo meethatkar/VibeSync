@@ -116,7 +116,8 @@ async function Login(req, res) {
 }
 
 async function getMe(req, res) {
-  const userId = req.user.userId;
+  const userId = req.user.user;
+  console.log("log: ", userId);
 
   const user = await userModel.findById(userId);
 
