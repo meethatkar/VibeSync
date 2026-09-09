@@ -1,3 +1,13 @@
+/*
+  STEPS:-
+    !. write method
+    2. extract token from cookies
+    3. verify it with jwt (import needed)
+    4. wrap it with tryCatch
+    5. set req.user
+    6. return with next()
+*/
+
 const jwt = require("jsonwebtoken");
 const blacklistModel = require("../models/blacklist.model");
 const redis = require("../config/cache");

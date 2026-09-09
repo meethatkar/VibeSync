@@ -11,11 +11,10 @@ const songSchema = new mongoose.Schema({
   },
   releasedOn: {
     type: String,
-    required: [true, "song release date is required"],
   },
   plays: {
     type: String,
-    required: [true, "song played count is required"],
+    default: 0,
   },
   songUrl: {
     type: String,
@@ -32,11 +31,20 @@ const songSchema = new mongoose.Schema({
   mood: {
     type: String,
     enums: {
-      value: ["sad", "happy", "fearful", "suprised", "angry", "calm", "netural", "disgusted"],
-      message: "values must be from the fixed enums only"
-    }
-  }
-})
+      value: [
+        "sad",
+        "happy",
+        "fearful",
+        "suprised",
+        "angry",
+        "calm",
+        "netural",
+        "disgusted",
+      ],
+      message: "values must be from the fixed enums only",
+    },
+  },
+});
 
 const songModel = mongoose.model("songs", songSchema);
 
