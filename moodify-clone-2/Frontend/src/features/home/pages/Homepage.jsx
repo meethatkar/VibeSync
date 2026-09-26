@@ -4,6 +4,7 @@ import { useSong } from "../hooks/useSong";
 import MusicPlayer from "../components/MusicPlayer";
 import SongList from "../components/SongList";
 import GradientWaves from "../components/GradientWaves";
+import Hero from "../components/hero/Hero";
 import "../styles/Homepage.scss";
 
 const HomePage = () => {
@@ -58,7 +59,16 @@ const HomePage = () => {
 
   return (
     <div className="homepage-container" style={{ position: "relative" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+        }}
+      >
         <GradientWaves
           horizonColor="#5227FF"
           waveColor="#FF9FFC"
@@ -82,46 +92,50 @@ const HomePage = () => {
           grainIntensity={0.05}
         />
       </div>
-      
-      <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
-        <div className="homepage-header">
-        <h1 className="homepage-title">Moodify</h1>
-        <p className="homepage-subtitle">Let your face choose the music</p>
-      </div>
 
-      <div className="dashboard-layout">
-        {/* Left Section: Camera */}
-        <div className="dashboard-section">
-          <div className="camera-wrapper">
-            <Camera onEmotionChange={handleEmotionChange} />
-            {currentEmotion && (
-              <div className="mood-display">Current Mood: {currentEmotion}</div>
-            )}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <Hero
+          onEmotionChange={handleEmotionChange}
+          currentSongName={
+            songs?.[currentSongIndex]?.title || songs?.[currentSongIndex]?.name
+          }
+        />
+
+        <div className="dashboard-layout">
+          {/* Left Section: Empty or could be used for something else now, hiding for now */}
+          <div className="dashboard-section hidden lg:block">
+            {/* Camera is now in Hero section */}
+          </div>
+
+          {/* Middle Section: Music Player */}
+          <div className="dashboard-section">
+            <MusicPlayer
+              song={songs?.[currentSongIndex]}
+              onNext={
+                songs && currentSongIndex < songs.length - 1
+                  ? handleNextSong
+                  : null
+              }
+              onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
+            />
+          </div>
+
+          {/* Right Section: Playlist */}
+          <div className="dashboard-section">
+            <SongList
+              songs={songs}
+              currentSongIndex={currentSongIndex}
+              onSelectSong={setCurrentSongIndex}
+            />
           </div>
         </div>
-
-        {/* Middle Section: Music Player */}
-        <div className="dashboard-section">
-          <MusicPlayer
-            song={songs?.[currentSongIndex]}
-            onNext={
-              songs && currentSongIndex < songs.length - 1
-                ? handleNextSong
-                : null
-            }
-            onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
-          />
-        </div>
-
-        {/* Right Section: Playlist */}
-        <div className="dashboard-section">
-          <SongList
-            songs={songs}
-            currentSongIndex={currentSongIndex}
-            onSelectSong={setCurrentSongIndex}
-          />
-        </div>
-      </div>
       </div>
     </div>
   );
