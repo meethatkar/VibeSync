@@ -5,11 +5,13 @@ import { AuthProvider } from "./features/auth/auth.context.jsx";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./app.route.jsx";
 import { SongContextProvider } from "./features/home/song.context.jsx";
+import Navbar from "./components/navbar/Navbar";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <SongContextProvider>
+        <Navbar />
         <RouterProvider router={router} />
       </SongContextProvider>
     </AuthProvider>
