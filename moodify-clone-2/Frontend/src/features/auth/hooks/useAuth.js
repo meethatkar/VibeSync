@@ -11,6 +11,7 @@ export const useAuth = () => {
     seterror(null);
     try {
       const response = await registerUser(username, email, password);
+      setuser(response.data.user);
       console.log("RES REGI: ", response);
     } catch (error) {
       seterror(error);
@@ -25,6 +26,7 @@ export const useAuth = () => {
     seterror(null);
     try {
       const response = await loginUser(userInfo, password);
+      setuser(response.data.user);
       console.log("RES LOGIN: ", response);
     } catch (error) {
       seterror(error);
