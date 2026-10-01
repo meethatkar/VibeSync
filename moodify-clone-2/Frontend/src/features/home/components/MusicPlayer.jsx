@@ -3,7 +3,7 @@ import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat, Heart, Volume2, Li
 import { Button } from "../../../components/ui/button";
 import "../styles/MusicPlayer.scss"; // Optional, can remove if all styles are inline/tailwind
 
-const MusicPlayer = ({ song, onNext, onPrev }) => {
+const MusicPlayer = ({ song, onNext, onPrev, onTogglePlaylist }) => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -158,7 +158,10 @@ const MusicPlayer = ({ song, onNext, onPrev }) => {
               />
             </div>
             
-            <button className="text-gray-400 hover:text-white transition-colors hidden sm:block">
+            <button 
+              className="text-gray-400 hover:text-white transition-colors hidden sm:block"
+              onClick={onTogglePlaylist}
+            >
               <ListMusic className="w-5 h-5" />
             </button>
           </div>

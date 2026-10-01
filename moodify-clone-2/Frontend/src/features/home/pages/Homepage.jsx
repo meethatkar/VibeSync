@@ -10,6 +10,7 @@ import "../styles/Homepage.scss";
 const HomePage = () => {
   const [currentEmotion, setCurrentEmotion] = useState("");
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
 
   const lastFetchedMoodRef = useRef("");
   const fetchingMoodRef = useRef(false);
@@ -110,20 +111,22 @@ const HomePage = () => {
 
         <MoodPlaylists onMoodSelect={handleEmotionChange} />
 
-        <div className="dashboard-layout">
-          {/* Left Section: Empty or could be used for something else now, hiding for now */}
-          <div className="dashboard-section hidden lg:block">
-            {/* Camera is now in Hero section */}
-          </div>
+        {/* Spacer for fixed music player to prevent hiding content */}
+        <div className="h-16 sm:h-24 w-full flex-shrink-0 pointer-events-none"></div>
 
-          {/* Right Section: Playlist */}
-          <div className="dashboard-section">
-            <SongList
-              songs={songs}
-              currentSongIndex={currentSongIndex}
-              onSelectSong={setCurrentSongIndex}
-            />
-          </div>
+        {/* Playlist Popup */}
+        <div
+          className={`fixed z-[90] right-4 lg:right-12 bottom-[100px] w-80 lg:w-96 max-h-[60vh] overflow-y-auto bg-[#1a1c23]/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl transition-all duration-300 transform ${
+            isPlaylistOpen
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-12 pointer-events-none"
+          }`}
+        >
+          <SongList
+            songs={songs}
+            currentSongIndex={currentSongIndex}
+            onSelectSong={setCurrentSongIndex}
+          />
         </div>
 
         {/* Fixed Bottom Player */}
@@ -133,6 +136,7 @@ const HomePage = () => {
             songs && currentSongIndex < songs.length - 1 ? handleNextSong : null
           }
           onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
+          onTogglePlaylist={() => setIsPlaylistOpen(!isPlaylistOpen)}
         />
       </div>
     </div>
