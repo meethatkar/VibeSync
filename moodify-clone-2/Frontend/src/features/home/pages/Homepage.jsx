@@ -1,10 +1,10 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
-import Camera from "../../expression/components/Camera";
+import React, { useCallback, useRef, useState } from "react";
 import { useSong } from "../hooks/useSong";
 import MusicPlayer from "../components/MusicPlayer";
 import SongList from "../components/SongList";
 import GradientWaves from "../components/GradientWaves";
 import Hero from "../components/hero/Hero";
+import MoodPlaylists from "../components/mood-playlists/MoodPlaylists";
 import "../styles/Homepage.scss";
 
 const HomePage = () => {
@@ -108,6 +108,8 @@ const HomePage = () => {
           }
         />
 
+        <MoodPlaylists onMoodSelect={handleEmotionChange} />
+
         <div className="dashboard-layout">
           {/* Left Section: Empty or could be used for something else now, hiding for now */}
           <div className="dashboard-section hidden lg:block">
@@ -128,9 +130,7 @@ const HomePage = () => {
         <MusicPlayer
           song={songs?.[currentSongIndex]}
           onNext={
-            songs && currentSongIndex < songs.length - 1
-              ? handleNextSong
-              : null
+            songs && currentSongIndex < songs.length - 1 ? handleNextSong : null
           }
           onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
         />
