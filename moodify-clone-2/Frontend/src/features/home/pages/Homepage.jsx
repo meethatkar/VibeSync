@@ -114,19 +114,6 @@ const HomePage = () => {
             {/* Camera is now in Hero section */}
           </div>
 
-          {/* Middle Section: Music Player */}
-          <div className="dashboard-section">
-            <MusicPlayer
-              song={songs?.[currentSongIndex]}
-              onNext={
-                songs && currentSongIndex < songs.length - 1
-                  ? handleNextSong
-                  : null
-              }
-              onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
-            />
-          </div>
-
           {/* Right Section: Playlist */}
           <div className="dashboard-section">
             <SongList
@@ -136,6 +123,17 @@ const HomePage = () => {
             />
           </div>
         </div>
+
+        {/* Fixed Bottom Player */}
+        <MusicPlayer
+          song={songs?.[currentSongIndex]}
+          onNext={
+            songs && currentSongIndex < songs.length - 1
+              ? handleNextSong
+              : null
+          }
+          onPrev={songs && currentSongIndex > 0 ? handlePrevSong : null}
+        />
       </div>
     </div>
   );

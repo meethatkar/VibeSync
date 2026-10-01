@@ -6,6 +6,8 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./app.route.jsx";
 import { SongContextProvider } from "./features/home/song.context.jsx";
 import Navbar from "./components/navbar/Navbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -13,6 +15,7 @@ createRoot(document.getElementById("root")).render(
       <SongContextProvider>
         <Navbar />
         <RouterProvider router={router} />
+        <ToastContainer />
       </SongContextProvider>
     </AuthProvider>
   </StrictMode>,

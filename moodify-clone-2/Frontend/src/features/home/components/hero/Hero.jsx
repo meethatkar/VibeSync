@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { useEmotion } from "../../../expression/hooks/useEmotion";
 import HeroLeftContent from "./HeroLeftContent";
 import ScannerCard from "./ScannerCard";
+import { showErrorToast, showSuccessToast } from "../../../../utils/toast";
 
 const Hero = ({ onEmotionChange, currentSongName }) => {
   const videoRef = useRef(null);
@@ -33,11 +34,10 @@ const Hero = ({ onEmotionChange, currentSongName }) => {
       }
       setIsCameraReady(true);
       startDetection();
+      showSuccessToast("Camera started successfully");
     } catch (error) {
       console.error("Camera Error:", error);
-      alert(
-        "Could not access camera. Please grant permissions in your browser.",
-      );
+      showErrorToast("Could not access camera. Please grant permissions in your browser.");
     }
   };
 
